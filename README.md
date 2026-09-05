@@ -67,7 +67,7 @@ The repository has been validated with **Python 3.13.5** and the exact package v
 ### Windows PowerShell
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/rodrigosicilia/student-success-ml.git
 cd student-success-ml
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -79,7 +79,7 @@ jupyter lab
 ### macOS or Linux
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/rodrigosicilia/student-success-ml.git
 cd student-success-ml
 python3.13 -m venv .venv
 source .venv/bin/activate
