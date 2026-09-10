@@ -22,6 +22,7 @@ Thumbs.db
 
 # Local execution artefacts
 notebooks/*_executed.ipynb
+executed/
 *.log
 
 # Secrets

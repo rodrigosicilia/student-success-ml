@@ -1,13 +1,23 @@
-# Environment validated with Python 3.13.5
+# Developed on Python 3.13; CI runs the notebook on Python 3.11, 3.12 and 3.13.
 # Install with: python -m pip install -r requirements.txt
 
-numpy==2.3.5
-pandas==2.2.3
-matplotlib==3.10.8
-scipy==1.17.0
-scikit-learn==1.8.0
-joblib==1.5.3
-threadpoolctl==3.6.0
-jupyterlab==4.5.3
-ipykernel==7.2.0
-nbconvert==7.17.1
+# Lower bounds are minimums known to work. Upper bounds are only present where a
+# newer release is known to break this notebook:
+#   matplotlib < 3.11  -> 3.11 removed the `labels` argument of Axes.boxplot(),
+#                         which section 2.7 of the notebook uses.
+#   pandas < 4         -> pandas 4 will stop selecting text columns via
+#                         select_dtypes(include=['object']), which the one-hot
+#                         encoding in section 3 relies on.
+
+numpy>=1.26
+pandas>=2.1,<4
+matplotlib>=3.8,<3.11
+scipy>=1.11
+scikit-learn>=1.4
+joblib>=1.3
+threadpoolctl>=3.1
+
+# Only needed to open or execute the notebook, not to read it on GitHub.
+jupyterlab>=4.0
+ipykernel>=6.25
+nbconvert>=7.0

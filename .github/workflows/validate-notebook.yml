@@ -5,29 +5,57 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A new push to the same branch makes an in-flight run obsolete.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   execute-notebook:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
           cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Execute notebook
+      - name: Report resolved versions
+        run: python -m pip list
+
+      - name: Execute notebook end to end
+        env:
+          MPLBACKEND: Agg
         run: |
           jupyter nbconvert --to notebook --execute notebooks/student_success_analysis.ipynb \
             --output student_success_analysis_executed.ipynb \
-            --output-dir /tmp \
+            --output-dir executed \
             --ExecutePreprocessor.timeout=1800
+
+      - name: Check the headline results were reproduced
+        run: python .github/scripts/check_results.py executed/student_success_analysis_executed.ipynb
+
+      - name: Upload executed notebook
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: executed-notebook-py${{ matrix.python-version }}
+          path: executed/student_success_analysis_executed.ipynb
+          if-no-files-found: warn

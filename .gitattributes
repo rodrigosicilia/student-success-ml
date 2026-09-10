@@ -1,0 +1,10 @@
+# Normalise line endings so the repository stays LF-only regardless of the
+# contributor's core.autocrlf setting.
+* text=auto eol=lf
+
+# Notebooks are JSON: keep them LF and never let Git guess.
+*.ipynb text eol=lf
+
+# Data and binaries must not be touched.
+*.csv text eol=lf
+*.png binary
